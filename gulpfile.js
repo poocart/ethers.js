@@ -148,7 +148,7 @@ function taskBundle(name, options) {
                 [ createTransform(transforms, show), { global: true } ]
             ],
         })
-        .ignore("react-native")
+        .ignore(["react-native-scrypt", "react-native"])
         .bundle()
         .pipe(source(options.filename))
 
