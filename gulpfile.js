@@ -134,7 +134,6 @@ function taskBundle(name, options) {
         "ethers.js/wordlists/index.js": readShim("wordlists"),
 
     };
-
     gulp.task(name, function () {
 
         var result = browserify({
@@ -144,8 +143,12 @@ function taskBundle(name, options) {
             cache: { },
             packageCache: {},
             standalone: "ethers",
-            transform: [ [ createTransform(transforms, show), { global: true } ] ],
+            transform: [
+                [ "babelify", { presets: ["@babel/preset-env", "@babel/preset-react"], sourceMaps: true, global: true }],
+                [ createTransform(transforms, show), { global: true } ]
+            ],
         })
+        .ignore("react-native")
         .bundle()
         .pipe(source(options.filename))
 

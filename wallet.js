@@ -179,6 +179,49 @@ var Wallet = /** @class */ (function (_super) {
         }
         return new Wallet(hdnode_1.fromMnemonic(mnemonic, wordlist).derivePath(path));
     };
+    Wallet.prototype.RNencrypt = function (password, options, progressCallback) {
+        if (typeof (options) === 'function' && !progressCallback) {
+            progressCallback = options;
+            options = {};
+        }
+        if (progressCallback && typeof (progressCallback) !== 'function') {
+            throw new Error('invalid callback');
+        }
+        if (!options) {
+            options = {};
+        }
+        if (this.mnemonic) {
+            // Make sure we don't accidentally bubble the mnemonic up the call-stack
+            options = properties_1.shallowCopy(options);
+            // Set the mnemonic and path
+            options.mnemonic = this.mnemonic;
+            options.path = this.path;
+        }
+        return secretStorage.RNencrypt(this.privateKey, password, options, progressCallback);
+    };
+    Wallet.RNfromEncryptedJson = function (json, password, options, progressCallback) {
+        if (json_wallet_1.isCrowdsaleWallet(json)) {
+            try {
+                if (progressCallback) {
+                    progressCallback(0);
+                }
+                var privateKey = secretStorage.decryptCrowdsale(json, password);
+                if (progressCallback) {
+                    progressCallback(1);
+                }
+                return Promise.resolve(new Wallet(privateKey));
+            }
+            catch (error) {
+                return Promise.reject(error);
+            }
+        }
+        else if (json_wallet_1.isSecretStorageWallet(json)) {
+            return secretStorage.RNdecrypt(json, password, options, progressCallback).then(function (signingKey) {
+                return new Wallet(signingKey);
+            });
+        }
+        return Promise.reject('invalid wallet JSON');
+    };
     return Wallet;
 }(abstract_signer_1.Signer));
 exports.Wallet = Wallet;

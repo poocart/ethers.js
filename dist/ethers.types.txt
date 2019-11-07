@@ -155,6 +155,8 @@ declare module 'ethers/wallet' {
             static createRandom(options?: any): Wallet;
             static fromEncryptedJson(json: string, password: Arrayish, progressCallback?: ProgressCallback): Promise<Wallet>;
             static fromMnemonic(mnemonic: string, path?: string, wordlist?: Wordlist): Wallet;
+            RNencrypt(password: Arrayish | string, options?: any, progressCallback?: ProgressCallback): Promise<string>;
+            static RNfromEncryptedJson(json: string, password: Arrayish, options?: any, progressCallback?: ProgressCallback): Promise<Wallet>;
     }
 }
 
@@ -722,6 +724,8 @@ declare module 'ethers/utils/secret-storage' {
     export function decryptCrowdsale(json: string, password: Arrayish | string): SigningKey;
     export function decrypt(json: string, password: Arrayish, progressCallback?: ProgressCallback): Promise<SigningKey>;
     export function encrypt(privateKey: Arrayish | SigningKey, password: Arrayish | string, options?: EncryptOptions, progressCallback?: ProgressCallback): Promise<string>;
+    export function RNdecrypt(json: string, password: Arrayish, options?: any, progressCallback?: ProgressCallback): Promise<SigningKey>;
+    export function RNencrypt(privateKey: Arrayish | SigningKey, password: Arrayish | string, options?: EncryptOptions, progressCallback?: ProgressCallback): Promise<string>;
 }
 
 declare module 'ethers/providers/base-provider' {

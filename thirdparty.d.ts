@@ -140,3 +140,7 @@ declare module "xmlhttprequest" {
     }
 }
 
+declare module "react-native-scrypt" {
+    export default function(password: any, salt: any, N: number, r: number, p: number, dkLen: number): any;
+}
+
